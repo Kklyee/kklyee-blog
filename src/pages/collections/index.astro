@@ -7,7 +7,6 @@ const [seriesEntries, posts] = await Promise.all([getCollection("series"), getPu
 ---
 
 <BaseLayout title="合集" description="按主题连续阅读 Kklyee.dev 的技术文章。">
-  <header class="page-heading"><p>COLLECTIONS</p><h1>合集</h1></header>
   <ol class="collection-list">
     {seriesEntries.map((series) => {
       const count = postsInSeries(posts, series.id).length;
@@ -22,3 +21,12 @@ const [seriesEntries, posts] = await Promise.all([getCollection("series"), getPu
     })}
   </ol>
 </BaseLayout>
+
+<style>
+  .collection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+</style>

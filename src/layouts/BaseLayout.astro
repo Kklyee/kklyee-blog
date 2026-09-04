@@ -28,10 +28,12 @@ const {
     <title>{title === "Kklyee.dev" ? title : `${title} · Kklyee.dev`}</title>
     <ClientRouter />
     <script is:inline>
-      const savedTheme = localStorage.getItem("kklyee-theme");
-      if (savedTheme === "light" || savedTheme === "dark") {
-        document.documentElement.dataset.theme = savedTheme;
-      }
+      (() => {
+        const savedTheme = localStorage.getItem("kklyee-theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      })();
     </script>
   </head>
   <body>

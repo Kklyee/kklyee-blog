@@ -16,15 +16,24 @@ import KklyeeLogo from "../brand/KklyeeLogo.astro";
 </header>
 
 <script is:inline>
-  const root = document.documentElement;
-  const saved = localStorage.getItem("kklyee-theme");
-  if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+  (() => {
+    const root = document.documentElement;
+    const saved = localStorage.getItem("kklyee-theme");
+    if (saved === "light" || saved === "dark") root.dataset.theme = saved;
 
-  document.querySelector(".theme-toggle")?.addEventListener("click", () => {
-    const current = root.dataset.theme ??
-      (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    localStorage.setItem("kklyee-theme", next);
-  });
+    if (window.__kklyeeThemeToggleInitialized) return;
+    window.__kklyeeThemeToggleInitialized = true;
+
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      const toggle = target instanceof Element ? target.closest(".theme-toggle") : null;
+      if (!toggle) return;
+
+      const current = root.dataset.theme ??
+        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      const next = current === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("kklyee-theme", next);
+    });
+  })();
 </script>
