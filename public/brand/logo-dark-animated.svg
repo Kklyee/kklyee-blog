@@ -1,6 +1,6 @@
 <svg class="kklyee-logo kklyee-logo--dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 112" role="img" aria-labelledby="title desc">
-  <title id="title">Kklyee.top</title>
-  <desc id="desc">Animated dark-mode Kklyee.top wordmark.</desc>
+  <title id="title">Kklyee.dev</title>
+  <desc id="desc">Animated dark-mode Kklyee.dev wordmark.</desc>
 
   <style>
     #letter-Kk {
@@ -143,5 +143,5 @@
 
   <circle id="period-core" cx="247" cy="77" r="2" fill="#5C7CFF" />
 
-  <text id="suffix-dev" x="264" y="84" fill="#F8F8F8" font-family="Nimbus Sans, Helvetica Neue, Arial, sans-serif" font-size="45" font-weight="300" letter-spacing="-1.2">top</text>
+  <text id="suffix-dev" x="264" y="84" fill="#F8F8F8" font-family="Nimbus Sans, Helvetica Neue, Arial, sans-serif" font-size="45" font-weight="300" letter-spacing="-1.2">dev</text>
 </svg>
