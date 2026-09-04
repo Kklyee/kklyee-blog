@@ -1,11 +1,11 @@
 ---
 title: 一句话讲清 LLM：为什么预测下一个 Token 也能产生智能？
-description: "" 
+description: ""
 publishedAt: 2026-09-03
+series: "llms-from-scratch"
+seriesOrder: 1
 draft: false
 ---
-
-
 
 ChatGPT 能写文章、编程序、解释论文，也能解决部分数学题。
 
@@ -100,12 +100,12 @@ P(x_t\mid x_1,x_2,\ldots,x_{t-1})
 模型不会只输出一个候选，而是输出整个词表上的概率分布。
 
 | 候选 Token概率 |      |
-| ---------- | ---- |
-| blue       | 0.71 |
-| clear      | 0.09 |
-| dark       | 0.05 |
-| green      | 0.01 |
-| 其他         | 0.14 |
+| -------------- | ---- |
+| blue           | 0.71 |
+| clear          | 0.09 |
+| dark           | 0.05 |
+| green          | 0.01 |
+| 其他           | 0.14 |
 
 解码器再根据 Temperature、Top-p 等策略，从概率分布中选择一个 Token。
 

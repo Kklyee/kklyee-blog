@@ -5,9 +5,7 @@ export type Series = CollectionEntry<"series">;
 
 export async function getPublishedPosts() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
-  return posts.sort(
-    (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
-  );
+  return posts.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 }
 
 export async function getSeriesMap() {

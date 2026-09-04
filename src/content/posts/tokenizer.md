@@ -2,10 +2,10 @@
 title: 大模型吃进去的是什么？从互联网数据到 Token
 description: ""
 publishedAt: 2026-09-03
+series: llms-from-scratch
+seriesOrder: 2
 draft: false
 ---
-
-# 第二篇：
 
 > 《LLM 从零到一》系列第 2/8 篇
 

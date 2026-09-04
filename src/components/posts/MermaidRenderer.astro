@@ -3,17 +3,6 @@
 
   const root = document.documentElement;
   const systemTheme = matchMedia("(prefers-color-scheme: dark)");
-  const sourceBlocks = document.querySelectorAll("pre > code.language-mermaid");
-
-  sourceBlocks.forEach((code, index) => {
-    const container = document.createElement("div");
-    container.className = "mermaid";
-    container.id = `mermaid-${index}`;
-    container.dataset.mermaidSource = code.textContent ?? "";
-    code.parentElement?.replaceWith(container);
-  });
-
-  const diagrams = Array.from(document.querySelectorAll<HTMLElement>(".mermaid[data-mermaid-source]"));
   const themeVariables = {
     light: {
       background: "#F8F8F5",
@@ -52,7 +41,22 @@
   const getTheme = () => root.dataset.theme === "dark" ||
     (!root.dataset.theme && systemTheme.matches) ? "dark" : "light";
 
+  const prepareDiagrams = () => {
+    const sourceBlocks = document.querySelectorAll("pre > code.language-mermaid");
+
+    sourceBlocks.forEach((code, index) => {
+      const container = document.createElement("div");
+      container.className = "mermaid";
+      container.id = `mermaid-${index}`;
+      container.dataset.mermaidSource = code.textContent ?? "";
+      code.parentElement?.replaceWith(container);
+    });
+
+    return Array.from(document.querySelectorAll<HTMLElement>(".mermaid[data-mermaid-source]"));
+  };
+
   async function renderDiagrams() {
+    const diagrams = prepareDiagrams();
     if (!diagrams.length) return;
 
     const theme = getTheme();
@@ -79,6 +83,7 @@
   };
 
   queueRender();
+  document.addEventListener("astro:page-load", queueRender);
 
   new MutationObserver(queueRender).observe(root, {
     attributes: true,
