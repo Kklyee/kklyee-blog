@@ -6,16 +6,21 @@ import { readingMinutes } from "../../lib/reading-time";
 interface Props {
   posts: Post[];
   seriesMap: Map<string, Series>;
+  postsPerPage?: number;
 }
 
-const { posts, seriesMap } = Astro.props;
+const { posts, seriesMap, postsPerPage } = Astro.props;
 ---
 
 <ol class="post-list">
-  {posts.map((post) => {
+  {posts.map((post, index) => {
     const series = post.data.series ? seriesMap.get(post.data.series) : undefined;
     return (
-      <li class="post-row">
+      <li
+        class="post-row"
+        data-post-index={postsPerPage ? index : undefined}
+        hidden={postsPerPage ? index >= postsPerPage : false}
+      >
         <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
         <div class="post-row__body">
           <div class="post-row__titleline">

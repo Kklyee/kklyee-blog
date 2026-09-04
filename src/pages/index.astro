@@ -5,14 +5,106 @@ import { getPublishedPosts, getSeriesMap } from "../lib/content";
 
 const posts = await getPublishedPosts();
 const seriesMap = await getSeriesMap();
+const postsPerPage = 5;
+const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
 ---
 
-<BaseLayout>
+<BaseLayout bodyClass="home-page">
   <section class="intro" aria-labelledby="intro-title">
     <p>写代码，也记录技术背后的判断与取舍。</p>
   </section>
 
   <section class="latest" aria-labelledby="latest-title">
-    <PostList posts={posts} seriesMap={seriesMap} />
+    <PostList posts={posts} seriesMap={seriesMap} postsPerPage={postsPerPage} />
   </section>
+
+  <nav
+    class="floating-pagination"
+    aria-label="文章分页"
+    data-pagination
+    data-page-size={postsPerPage}
+    data-total-pages={totalPages}
+  >
+    <button
+      class="floating-pagination__button"
+      type="button"
+      data-page-previous
+      aria-label="上一页"
+      disabled
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+      <span>上一页</span>
+    </button>
+    <span class="floating-pagination__status" aria-live="polite" data-page-status>1 / {totalPages}</span>
+    <button
+      class="floating-pagination__button"
+      type="button"
+      data-page-next
+      aria-label="下一页"
+      disabled={totalPages === 1}
+    >
+      <span>下一页</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+    </button>
+  </nav>
 </BaseLayout>
+
+<script>
+  const setupPagination = () => {
+    const pagination = document.querySelector<HTMLElement>("[data-pagination]");
+    if (!pagination || pagination.dataset.ready === "true") return;
+
+    pagination.dataset.ready = "true";
+    const posts = [...document.querySelectorAll<HTMLElement>("[data-post-index]")];
+    const previous = pagination.querySelector<HTMLButtonElement>("[data-page-previous]");
+    const next = pagination.querySelector<HTMLButtonElement>("[data-page-next]");
+    const status = pagination.querySelector<HTMLElement>("[data-page-status]");
+    const pageSize = Number(pagination.dataset.pageSize ?? 5);
+    const totalPages = Number(pagination.dataset.totalPages ?? 1);
+
+    if (!previous || !next || !status) return;
+
+    const pageFromUrl = () => {
+      const requestedPage = Number(new URL(window.location.href).searchParams.get("page") ?? 1);
+      return Number.isInteger(requestedPage) ? Math.min(Math.max(requestedPage, 1), totalPages) : 1;
+    };
+
+    const renderPage = (page: number, updateUrl = false) => {
+      const firstPost = (page - 1) * pageSize;
+      const lastPost = firstPost + pageSize;
+
+      posts.forEach((post, index) => {
+        post.hidden = index < firstPost || index >= lastPost;
+      });
+      previous.disabled = page === 1;
+      next.disabled = page === totalPages;
+      status.textContent = `${page} / ${totalPages}`;
+
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        if (page === 1) url.searchParams.delete("page");
+        else url.searchParams.set("page", String(page));
+        window.history.pushState({ page }, "", url);
+      }
+
+      pagination.dataset.currentPage = String(page);
+    };
+
+    previous.addEventListener("click", () => {
+      renderPage(Math.max(1, Number(pagination.dataset.currentPage) - 1), true);
+    });
+    next.addEventListener("click", () => {
+      renderPage(Math.min(totalPages, Number(pagination.dataset.currentPage) + 1), true);
+    });
+    window.addEventListener("popstate", () => renderPage(pageFromUrl()));
+
+    renderPage(pageFromUrl());
+  };
+
+  document.addEventListener("astro:page-load", setupPagination);
+  setupPagination();
+</script>

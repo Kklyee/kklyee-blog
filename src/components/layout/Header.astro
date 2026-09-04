@@ -1,15 +1,25 @@
 ---
 import KklyeeLogo from "../brand/KklyeeLogo.astro";
+
+const pathname = Astro.url.pathname;
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
     <KklyeeLogo />
     <nav class="site-nav" aria-label="主导航">
-      <a href="/collections/">合集</a>
-      <a href="/about/">关于</a>
+      <a href="/collections/" class:list={{ active: pathname.startsWith("/collections") }}>合集</a>
+      <a href="/about/" class:list={{ active: pathname.startsWith("/about") }}>关于</a>
+      <span class="site-nav__divider" aria-hidden="true"></span>
+      <a class="site-search" href="/posts/" aria-label="文章归档">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5"></circle>
+          <path d="m16 16 4 4"></path>
+        </svg>
+      </a>
       <button class="theme-toggle" type="button" aria-label="切换深浅色主题">
-        <span aria-hidden="true">◐</span>
+        <span class="theme-toggle__sun" aria-hidden="true">☼</span>
+        <span class="theme-toggle__moon" aria-hidden="true"></span>
       </button>
     </nav>
   </div>
@@ -20,6 +30,17 @@ import KklyeeLogo from "../brand/KklyeeLogo.astro";
     const root = document.documentElement;
     const saved = localStorage.getItem("kklyee-theme");
     if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+
+    const syncToggle = () => {
+      const dark = root.dataset.theme === "dark" ||
+        (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.querySelectorAll(".theme-toggle").forEach((toggle) => {
+        toggle.setAttribute("aria-pressed", String(dark));
+      });
+    };
+
+    syncToggle();
+    document.addEventListener("astro:page-load", syncToggle);
 
     if (window.__kklyeeThemeToggleInitialized) return;
     window.__kklyeeThemeToggleInitialized = true;
@@ -34,6 +55,7 @@ import KklyeeLogo from "../brand/KklyeeLogo.astro";
       const next = current === "dark" ? "light" : "dark";
       root.dataset.theme = next;
       localStorage.setItem("kklyee-theme", next);
+      syncToggle();
     });
   })();
 </script>

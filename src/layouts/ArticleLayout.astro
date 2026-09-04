@@ -11,9 +11,20 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date;
   headings?: MarkdownHeading[];
+  previousPost?: { id: string; title: string };
+  nextPost?: { id: string; title: string };
 }
 
-const { postId, title, description, publishedAt, updatedAt, headings = [] } = Astro.props;
+const {
+  postId,
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  headings = [],
+  previousPost,
+  nextPost,
+} = Astro.props;
 const outline = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
 ---
 
@@ -31,11 +42,30 @@ const outline = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
       <div class="prose">
         <slot />
       </div>
+      {(previousPost || nextPost) && (
+        <nav class="series-navigation" aria-label="系列文章导航">
+          {previousPost && (
+            <a class="series-navigation__link" href={`/posts/${previousPost.id}/`} rel="prev">
+              <span>← 上一篇</span>
+              <strong>{previousPost.title}</strong>
+            </a>
+          )}
+          {nextPost && (
+            <a
+              class="series-navigation__link series-navigation__link--next"
+              href={`/posts/${nextPost.id}/`}
+              rel="next"
+            >
+              <span>下一篇 →</span>
+              <strong>{nextPost.title}</strong>
+            </a>
+          )}
+        </nav>
+      )}
     </article>
 
     {outline.length > 0 && (
       <aside class="article-toc" aria-label="文章大纲">
-        <p class="article-toc__label">文章大纲</p>
         <nav>
           <ul class="article-toc__list">
             {outline.map((heading) => (
@@ -50,3 +80,48 @@ const outline = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
   </div>
   <GiscusComments />
 </BaseLayout>
+
+<script>
+  let removeTocListener: (() => void) | undefined;
+
+  function setupTocHighlight() {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".article-toc a"));
+    const headings = links.map(({ hash }) => document.getElementById(decodeURIComponent(hash.slice(1))));
+
+    if (links.length === 0) return;
+
+    let frameId = 0;
+    const updateActiveHeading = () => {
+      frameId = 0;
+      const activationLine = Math.min(160, window.innerHeight * 0.25);
+      let activeIndex = 0;
+
+      headings.forEach((heading, index) => {
+        if (heading && heading.getBoundingClientRect().top <= activationLine) activeIndex = index;
+      });
+
+      links.forEach((link, index) => {
+        if (index === activeIndex) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+    };
+    const requestUpdate = () => {
+      if (!frameId) frameId = requestAnimationFrame(updateActiveHeading);
+    };
+
+    updateActiveHeading();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    removeTocListener?.();
+    removeTocListener = setupTocHighlight();
+  });
+</script>

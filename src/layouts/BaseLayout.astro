@@ -8,11 +8,13 @@ import "../styles/global.css";
 interface Props {
   title?: string;
   description?: string;
+  bodyClass?: string;
 }
 
 const {
   title = "Kklyee.dev",
   description = "写代码，也记录技术背后的判断与取舍。",
+  bodyClass,
 } = Astro.props;
 ---
 
@@ -36,7 +38,7 @@ const {
       })();
     </script>
   </head>
-  <body>
+  <body class={bodyClass}>
     <Header />
     <main class="page-shell" transition:animate={fade({ duration: "0.35s" })}>
       <slot />
