@@ -35,4 +35,9 @@ assert.match(robots, /Sitemap: https:\/\/kklyee\.dev\/sitemap-index\.xml/);
 await readFile(join(dist, "sitemap-index.xml"), "utf8");
 await readFile(join(dist, "llms.txt"), "utf8");
 
+const home = await readFile(join(dist, "index.html"), "utf8");
+assert.match(home, /<link rel="icon" href="\/brand\/favicon\.svg"/);
+const favicon = await readFile(join(dist, "brand", "favicon.svg"), "utf8");
+assert.match(favicon, /viewBox="0 0 112 112"/);
+
 console.log("SEO output test passed");

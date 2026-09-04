@@ -63,8 +63,7 @@ const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [
     <meta name="twitter:description" content={description} />
     {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
     {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
-    <link rel="icon" href="/brand/logo-dark.svg" media="(prefers-color-scheme: light)" />
-    <link rel="icon" href="/brand/logo-light.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" sizes="any" />
     <title>{pageTitle}</title>
     {
       schemas.map((item) => (
