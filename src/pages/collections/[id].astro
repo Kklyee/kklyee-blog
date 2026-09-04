@@ -15,7 +15,6 @@ const { Content } = await render(series);
 
 <BaseLayout title={series.data.title} description={series.data.description}>
   <header class="collection-heading">
-    <p>COLLECTION · {String(posts.length).padStart(2, "0")}</p>
     <h1>{series.data.title}</h1>
     <p>{series.data.description}</p>
   </header>

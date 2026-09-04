@@ -31,10 +31,20 @@ const {
     <ClientRouter />
     <script is:inline>
       (() => {
-        const savedTheme = localStorage.getItem("kklyee-theme");
-        if (savedTheme === "light" || savedTheme === "dark") {
-          document.documentElement.dataset.theme = savedTheme;
-        }
+        const applySavedTheme = (targetDocument) => {
+          const savedTheme = localStorage.getItem("kklyee-theme");
+          if (savedTheme === "light" || savedTheme === "dark") {
+            targetDocument.documentElement.dataset.theme = savedTheme;
+          }
+        };
+
+        applySavedTheme(document);
+
+        if (window.__kklyeeThemeNavigationInitialized) return;
+        window.__kklyeeThemeNavigationInitialized = true;
+        document.addEventListener("astro:before-swap", (event) => {
+          applySavedTheme(event.newDocument);
+        });
       })();
     </script>
   </head>

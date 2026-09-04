@@ -10,16 +10,19 @@ const pathname = Astro.url.pathname;
     <nav class="site-nav" aria-label="主导航">
       <a href="/collections/" class:list={{ active: pathname.startsWith("/collections") }}>合集</a>
       <a href="/about/" class:list={{ active: pathname.startsWith("/about") }}>关于</a>
-      <span class="site-nav__divider" aria-hidden="true"></span>
-      <a class="site-search" href="/posts/" aria-label="文章归档">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="6.5"></circle>
-          <path d="m16 16 4 4"></path>
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="当前为浅色主题，切换为深色主题"
+        aria-pressed="false"
+      >
+        <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
         </svg>
-      </a>
-      <button class="theme-toggle" type="button" aria-label="切换深浅色主题">
-        <span class="theme-toggle__sun" aria-hidden="true">☼</span>
-        <span class="theme-toggle__moon" aria-hidden="true"></span>
+        <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.35 15.35A9 9 0 0 1 8.65 3.65a9 9 0 1 0 11.7 11.7Z"></path>
+        </svg>
       </button>
     </nav>
   </div>
@@ -27,15 +30,19 @@ const pathname = Astro.url.pathname;
 
 <script is:inline>
   (() => {
-    const root = document.documentElement;
     const saved = localStorage.getItem("kklyee-theme");
-    if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+    if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
 
     const syncToggle = () => {
+      const root = document.documentElement;
       const dark = root.dataset.theme === "dark" ||
         (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
       document.querySelectorAll(".theme-toggle").forEach((toggle) => {
         toggle.setAttribute("aria-pressed", String(dark));
+        toggle.setAttribute(
+          "aria-label",
+          dark ? "当前为深色主题，切换为浅色主题" : "当前为浅色主题，切换为深色主题",
+        );
       });
     };
 
@@ -50,6 +57,7 @@ const pathname = Astro.url.pathname;
       const toggle = target instanceof Element ? target.closest(".theme-toggle") : null;
       if (!toggle) return;
 
+      const root = document.documentElement;
       const current = root.dataset.theme ??
         (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
       const next = current === "dark" ? "light" : "dark";
