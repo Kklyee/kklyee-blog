@@ -23,7 +23,7 @@ for (const file of await htmlFiles(dist)) {
   const description = html.match(/<meta name="description" content="([^"]+)">/);
   const schemas = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/g)];
 
-  assert.ok(canonical?.[1].startsWith("https://kklyee.dev/"), `${file}: canonical missing`);
+  assert.ok(canonical?.[1].startsWith("https://kklyee.top/"), `${file}: canonical missing`);
   assert.ok(description?.[1].trim(), `${file}: description missing`);
   assert.ok(html.includes('<meta property="og:url"'), `${file}: Open Graph URL missing`);
   assert.ok(schemas.length > 0, `${file}: JSON-LD missing`);
@@ -31,7 +31,7 @@ for (const file of await htmlFiles(dist)) {
 }
 
 const robots = await readFile(join(dist, "robots.txt"), "utf8");
-assert.match(robots, /Sitemap: https:\/\/kklyee\.dev\/sitemap-index\.xml/);
+assert.match(robots, /Sitemap: https:\/\/kklyee\.top\/sitemap-index\.xml/);
 await readFile(join(dist, "sitemap-index.xml"), "utf8");
 await readFile(join(dist, "llms.txt"), "utf8");
 

@@ -16,7 +16,7 @@ interface Props {
 }
 
 const {
-  title = "Kklyee.dev",
+  title = "Kklyee.top",
   description = "写代码，也记录技术背后的判断与取舍。",
   bodyClass,
   type = "website",
@@ -24,12 +24,12 @@ const {
   updatedAt,
   schema,
 } = Astro.props;
-const pageTitle = title === "Kklyee.dev" ? title : `${title} · Kklyee.dev`;
+const pageTitle = title === "Kklyee.top" ? title : `${title} · Kklyee.top`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Kklyee.dev",
+  name: "Kklyee.top",
   url: new URL("/", Astro.site).href,
   inLanguage: "zh-CN",
   description: "Kklyee 的技术博客，记录 AI Agent、LLM 应用工程与 AI Coding 的实践和思考。",
@@ -51,9 +51,9 @@ const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [
     <meta name="description" content={description} />
     <meta name="author" content="Kklyee" />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" type="application/rss+xml" title="Kklyee.dev RSS" href={new URL("/rss.xml", Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title="Kklyee.top RSS" href={new URL("/rss.xml", Astro.site)} />
     <meta property="og:type" content={type} />
-    <meta property="og:site_name" content="Kklyee.dev" />
+    <meta property="og:site_name" content="Kklyee.top" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />

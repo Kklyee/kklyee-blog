@@ -1,4 +1,4 @@
-# Kklyee.dev
+# Kklyee.top
 
 Astro 7 技术博客骨架。内容使用 Markdown/MDX，首页保持纯文章时间流，合集通过文章标题旁的小型链接进入独立页面。
 
@@ -46,7 +46,7 @@ npm run build
 
 ## 发布
 
-站点使用 GitHub Pages 免费托管，生产域名为 `https://kklyee.dev`。推送到 `main` 分支后，GitHub Actions 会自动构建并发布 `dist/`。
+站点使用 GitHub Pages 免费托管，生产域名为 `https://kklyee.top`。推送到 `main` 分支后，GitHub Actions 会自动构建并发布 `dist/`。
 
 自定义根域名需要在域名服务商处添加 GitHub Pages 要求的 `A`/`AAAA` 记录，域名生效后再在仓库 Pages 设置中启用 HTTPS。
 

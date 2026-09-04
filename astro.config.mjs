@@ -10,7 +10,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeExternalLinks from "rehype-external-links";
 
 export default defineConfig({
-  site: "https://kklyee.dev",
+  site: "https://kklyee.top",
   output: "static",
   integrations: [mdx(), sitemap()],
   markdown: {
