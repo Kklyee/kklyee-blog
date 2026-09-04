@@ -17,9 +17,23 @@ const selectedWork = [
     href: "https://github.com/Kklyee/KklyeeNook",
   },
 ];
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Kklyee",
+  url: new URL("/about/", Astro.site).href,
+  jobTitle: "全栈开发者",
+  description: "专注 AI Agent、LLM 应用工程与 AI Coding。",
+  sameAs: ["https://github.com/Kklyee"],
+  knowsAbout: focuses,
+};
 ---
 
-<BaseLayout title="关于" description="Kklyee，全栈开发者，专注 AI Agent 与 LLM 应用工程。">
+<BaseLayout
+  title="关于"
+  description="Kklyee，全栈开发者，专注 AI Agent 与 LLM 应用工程。"
+  schema={personSchema}
+>
   <article class="about">
     <header class="about-hero">
       <p class="breadcrumb"><span>ABOUT</span><i>/</i>Kklyee</p>

@@ -26,15 +26,45 @@ const {
   nextPost,
 } = Astro.props;
 const outline = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  url: canonicalUrl.href,
+  mainEntityOfPage: canonicalUrl.href,
+  inLanguage: "zh-CN",
+  datePublished: publishedAt.toISOString(),
+  dateModified: (updatedAt ?? publishedAt).toISOString(),
+  author: {
+    "@type": "Person",
+    name: "Kklyee",
+    url: new URL("/about/", Astro.site).href,
+  },
+  publisher: {
+    "@type": "Person",
+    name: "Kklyee",
+    url: new URL("/about/", Astro.site).href,
+  },
+};
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedAt={publishedAt}
+  updatedAt={updatedAt}
+  schema={articleSchema}
+>
   <div class="article-layout">
     <article class="article">
       <header class="article__header">
         <p class="article__date">
-          <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time>
-          {updatedAt && <> · 更新于 {formatDate(updatedAt)}</>}
+          <span>作者：<a rel="author" href="/about/">Kklyee</a></span>
+          <span> · 发布于 <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time></span>
+          {updatedAt && <span> · 更新于 <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></span>}
         </p>
         <h1 transition:name={`post-title-${postId}`}>{title}</h1>
       </header>

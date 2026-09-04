@@ -1,6 +1,6 @@
 ---
 title: 一句话讲清 LLM：为什么预测下一个 Token 也能产生智能？
-description: ""
+description: "从 Token、概率分布与训练目标出发，解释大语言模型为什么通过预测下一个 Token 产生知识、推理与生成能力。"
 publishedAt: 2026-09-03
 series: "llms-from-scratch"
 seriesOrder: 1

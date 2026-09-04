@@ -44,4 +44,10 @@ npm run dev
 npm run build
 ```
 
+## 发布
+
+站点使用 GitHub Pages 免费托管，生产域名为 `https://kklyee.dev`。推送到 `main` 分支后，GitHub Actions 会自动构建并发布 `dist/`。
+
+自定义根域名需要在域名服务商处添加 GitHub Pages 要求的 `A`/`AAAA` 记录，域名生效后再在仓库 Pages 设置中启用 HTTPS。
+
 项目原计划通过官方 `create astro` CLI 初始化；当前执行环境无法连接包源，因此这里按官方 minimal 模板结构建立了等价骨架。网络可用后运行 `npm install` 即可生成锁文件并构建。

@@ -9,13 +9,37 @@ interface Props {
   title?: string;
   description?: string;
   bodyClass?: string;
+  type?: "website" | "article";
+  publishedAt?: Date;
+  updatedAt?: Date;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title = "Kklyee.dev",
   description = "写代码，也记录技术背后的判断与取舍。",
   bodyClass,
+  type = "website",
+  publishedAt,
+  updatedAt,
+  schema,
 } = Astro.props;
+const pageTitle = title === "Kklyee.dev" ? title : `${title} · Kklyee.dev`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Kklyee.dev",
+  url: new URL("/", Astro.site).href,
+  inLanguage: "zh-CN",
+  description: "Kklyee 的技术博客，记录 AI Agent、LLM 应用工程与 AI Coding 的实践和思考。",
+  author: {
+    "@type": "Person",
+    name: "Kklyee",
+    url: new URL("/about/", Astro.site).href,
+  },
+};
+const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
 ---
 
 <!doctype html>
@@ -25,9 +49,28 @@ const {
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <link rel="icon" href="/brand/favicon-light.svg" media="(prefers-color-scheme: light)" />
-    <link rel="icon" href="/brand/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
-    <title>{title === "Kklyee.dev" ? title : `${title} · Kklyee.dev`}</title>
+    <meta name="author" content="Kklyee" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="application/rss+xml" title="Kklyee.dev RSS" href={new URL("/rss.xml", Astro.site)} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Kklyee.dev" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+    {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
+    <link rel="icon" href="/brand/logo-dark.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/brand/logo-light.svg" media="(prefers-color-scheme: dark)" />
+    <title>{pageTitle}</title>
+    {
+      schemas.map((item) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />
+      ))
+    }
     <ClientRouter />
     <script is:inline>
       (() => {
