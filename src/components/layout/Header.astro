@@ -1,0 +1,30 @@
+---
+import KklyeeLogo from "../brand/KklyeeLogo.astro";
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <KklyeeLogo />
+    <nav class="site-nav" aria-label="主导航">
+      <a href="/collections/">合集</a>
+      <a href="/about/">关于</a>
+      <button class="theme-toggle" type="button" aria-label="切换深浅色主题">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  const root = document.documentElement;
+  const saved = localStorage.getItem("kklyee-theme");
+  if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+
+  document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+    const current = root.dataset.theme ??
+      (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    localStorage.setItem("kklyee-theme", next);
+  });
+</script>

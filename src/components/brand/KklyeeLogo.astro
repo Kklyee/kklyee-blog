@@ -1,0 +1,27 @@
+---
+interface Props {
+  animated?: boolean;
+  class?: string;
+}
+
+const { animated = true, class: className = "" } = Astro.props;
+const suffix = animated ? "-animated" : "";
+---
+
+<a class={`brand-logo ${className}`} href="/" aria-label="Kklyee.dev 首页">
+  <img
+    class="brand-logo__light"
+    src={`/brand/logo-light${suffix}.svg`}
+    alt="Kklyee.dev"
+    width="390"
+    height="112"
+  />
+  <img
+    class="brand-logo__dark"
+    src={`/brand/logo-dark${suffix}.svg`}
+    alt=""
+    width="390"
+    height="112"
+    aria-hidden="true"
+  />
+</a>

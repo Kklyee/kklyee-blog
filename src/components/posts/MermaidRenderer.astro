@@ -1,0 +1,89 @@
+<script>
+  import mermaid from "mermaid";
+
+  const root = document.documentElement;
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  const sourceBlocks = document.querySelectorAll("pre > code.language-mermaid");
+
+  sourceBlocks.forEach((code, index) => {
+    const container = document.createElement("div");
+    container.className = "mermaid";
+    container.id = `mermaid-${index}`;
+    container.dataset.mermaidSource = code.textContent ?? "";
+    code.parentElement?.replaceWith(container);
+  });
+
+  const diagrams = Array.from(document.querySelectorAll<HTMLElement>(".mermaid[data-mermaid-source]"));
+  const themeVariables = {
+    light: {
+      background: "#F8F8F5",
+      primaryColor: "#FFFFFF",
+      primaryTextColor: "#111318",
+      primaryBorderColor: "#DFE1E5",
+      lineColor: "#737B88",
+      secondaryColor: "#F8F8F5",
+      tertiaryColor: "#FFFFFF",
+      textColor: "#111318",
+      mainBkg: "#FFFFFF",
+      nodeBorder: "#DFE1E5",
+      clusterBkg: "#F8F8F5",
+      clusterBorder: "#DFE1E5",
+      titleColor: "#111318",
+      edgeLabelBackground: "#FFFFFF",
+    },
+    dark: {
+      background: "#111318",
+      primaryColor: "#171A20",
+      primaryTextColor: "#F8F8F5",
+      primaryBorderColor: "#30343D",
+      lineColor: "#9DA4B0",
+      secondaryColor: "#171A20",
+      tertiaryColor: "#111318",
+      textColor: "#F8F8F5",
+      mainBkg: "#171A20",
+      nodeBorder: "#30343D",
+      clusterBkg: "#171A20",
+      clusterBorder: "#30343D",
+      titleColor: "#F8F8F5",
+      edgeLabelBackground: "#171A20",
+    },
+  };
+
+  const getTheme = () => root.dataset.theme === "dark" ||
+    (!root.dataset.theme && systemTheme.matches) ? "dark" : "light";
+
+  async function renderDiagrams() {
+    if (!diagrams.length) return;
+
+    const theme = getTheme();
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      themeVariables: themeVariables[theme],
+      securityLevel: "strict",
+    });
+
+    diagrams.forEach((diagram) => {
+      diagram.removeAttribute("data-processed");
+      diagram.textContent = diagram.dataset.mermaidSource ?? "";
+    });
+
+    await mermaid.run({ nodes: diagrams });
+  }
+
+  let renderQueue = Promise.resolve();
+  const queueRender = () => {
+    renderQueue = renderQueue.then(renderDiagrams).catch((error) => {
+      console.error("Unable to render Mermaid diagram", error);
+    });
+  };
+
+  queueRender();
+
+  new MutationObserver(queueRender).observe(root, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+
+  systemTheme.addEventListener?.("change", queueRender);
+</script>

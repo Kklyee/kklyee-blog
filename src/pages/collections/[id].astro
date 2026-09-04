@@ -1,0 +1,34 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedPosts, postsInSeries } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("series");
+  return entries.map((series) => ({ params: { id: series.id }, props: { series } }));
+}
+
+const { series } = Astro.props;
+const posts = postsInSeries(await getPublishedPosts(), series.id);
+const { Content } = await render(series);
+---
+
+<BaseLayout title={series.data.title} description={series.data.description}>
+  <header class="collection-heading">
+    <p>COLLECTION · {String(posts.length).padStart(2, "0")}</p>
+    <h1>{series.data.title}</h1>
+    <p>{series.data.description}</p>
+  </header>
+  <div class="prose collection-intro"><Content /></div>
+  <ol class="series-posts">
+    {posts.map((post, index) => (
+      <li>
+        <span>{String(index + 1).padStart(2, "0")}</span>
+        <a href={`/posts/${post.id}/`} transition:name={`post-title-${post.id}`}>
+          {post.data.title}
+        </a>
+        <span>→</span>
+      </li>
+    ))}
+  </ol>
+</BaseLayout>

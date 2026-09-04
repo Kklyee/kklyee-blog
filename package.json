@@ -1,0 +1,35 @@
+{
+  "name": "kklyee-dev",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "latest",
+    "@astrojs/mdx": "latest",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "latest",
+    "astro": "7.2.10",
+    "katex": "latest",
+    "mdast-util-to-string": "latest",
+    "mermaid": "latest",
+    "reading-time": "latest",
+    "rehype-autolink-headings": "latest",
+    "rehype-external-links": "latest",
+    "rehype-katex": "latest",
+    "rehype-slug": "latest",
+    "remark-directive": "latest",
+    "remark-math": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
+    "typescript": "latest"
+  }
+}

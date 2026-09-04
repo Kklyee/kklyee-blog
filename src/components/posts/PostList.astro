@@ -1,0 +1,40 @@
+---
+import type { Post, Series } from "../../lib/content";
+import { formatDate } from "../../lib/content";
+import { readingMinutes } from "../../lib/reading-time";
+
+interface Props {
+  posts: Post[];
+  seriesMap: Map<string, Series>;
+}
+
+const { posts, seriesMap } = Astro.props;
+---
+
+<ol class="post-list">
+  {posts.map((post) => {
+    const series = post.data.series ? seriesMap.get(post.data.series) : undefined;
+    return (
+      <li class="post-row">
+        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+        <div class="post-row__body">
+          <div class="post-row__titleline">
+            <a
+              class="post-row__title"
+              href={`/posts/${post.id}/`}
+              transition:name={`post-title-${post.id}`}
+            >{post.data.title}</a>
+            {series && (
+              <a class="series-link" href={`/collections/${series.id}/`}>
+                ↗ {series.data.title}
+                {post.data.seriesOrder ? ` · ${String(post.data.seriesOrder).padStart(2, "0")}` : ""}
+              </a>
+            )}
+          </div>
+          <p>{post.data.description}</p>
+        </div>
+        <span class="post-row__reading">{readingMinutes(post.body ?? "")} 分钟阅读</span>
+      </li>
+    );
+  })}
+</ol>

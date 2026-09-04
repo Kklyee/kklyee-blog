@@ -1,0 +1,52 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import GiscusComments from "../components/comments/GiscusComments.astro";
+import { formatDate } from "../lib/content";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  postId: string;
+  title: string;
+  description: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  headings?: MarkdownHeading[];
+}
+
+const { postId, title, description, publishedAt, updatedAt, headings = [] } = Astro.props;
+const outline = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="article-layout">
+    <article class="article">
+      <header class="article__header">
+        <p class="article__date">
+          <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time>
+          {updatedAt && <> · 更新于 {formatDate(updatedAt)}</>}
+        </p>
+        <h1 transition:name={`post-title-${postId}`}>{title}</h1>
+        <p>{description}</p>
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+
+    {outline.length > 0 && (
+      <aside class="article-toc" aria-label="文章大纲">
+        <p class="article-toc__label">文章大纲</p>
+        <nav>
+          <ul class="article-toc__list">
+            {outline.map((heading) => (
+              <li class={`article-toc__item article-toc__item--${heading.depth}`}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    )}
+  </div>
+  <GiscusComments />
+</BaseLayout>

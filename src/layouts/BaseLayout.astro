@@ -1,0 +1,45 @@
+---
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import MermaidRenderer from "../components/posts/MermaidRenderer.astro";
+import { ClientRouter, fade } from "astro:transitions";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Kklyee.dev",
+  description = "写代码，也记录技术背后的判断与取舍。",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/brand/favicon-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/brand/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
+    <title>{title === "Kklyee.dev" ? title : `${title} · Kklyee.dev`}</title>
+    <ClientRouter />
+    <script is:inline>
+      const savedTheme = localStorage.getItem("kklyee-theme");
+      if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main class="page-shell" transition:animate={fade({ duration: "0.35s" })}>
+      <slot />
+    </main>
+    <Footer />
+    <MermaidRenderer />
+  </body>
+</html>
