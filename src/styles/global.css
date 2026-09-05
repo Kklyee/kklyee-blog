@@ -1,4 +1,6 @@
 @import "katex/dist/katex.min.css";
+@import "@fontsource/ibm-plex-mono/latin.css";
+@import "@fontsource/ibm-plex-mono/latin-italic.css";
 
 :root {
   color-scheme: light;
@@ -10,7 +12,7 @@
   --cobalt: #4242fa;
   --cobalt-dark: #809fff;
   --content: 72rem;
-  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: "IBM Plex Mono", monospace;
   background: var(--paper);
   color: var(--ink);
 }
@@ -37,8 +39,11 @@
   }
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  font-family: "IBM Plex Mono", monospace !important;
 }
 html {
   background: var(--paper);
@@ -490,18 +495,50 @@ button {
   margin-inline: 0;
   grid-column: 1;
 }
+.article__header {
+  padding-bottom: 0;
+}
 .article__date {
+  margin: 0 0 1rem;
   color: var(--cobalt) !important;
   font-size: 0.75rem;
 }
 .prose {
-  padding: 2.5rem 0;
+  --prose-flow-space: 1.5rem;
+  --prose-section-space: 4rem;
+  padding: clamp(2.75rem, 5vw, 3.5rem) 0 4rem;
   font-size: 1.05rem;
   line-height: 1.9;
 }
+.prose > * {
+  margin-block: 0;
+}
+.prose > * + * {
+  margin-top: var(--prose-flow-space);
+}
+.prose > p + p {
+  margin-top: 1rem;
+}
 .prose h2,
-.prose h3 {
-  scroll-margin-top: 2rem;
+.prose h3,
+.prose h4 {
+  scroll-margin-top: 5.5rem;
+  line-height: 1.4;
+}
+.prose > h2 {
+  margin-top: var(--prose-section-space);
+  font-size: 1.6rem;
+}
+.prose > h3 {
+  margin-top: 3rem;
+  font-size: 1.3rem;
+}
+.prose > h4 {
+  margin-top: 2.5rem;
+  font-size: 1.12rem;
+}
+.prose > :is(h2, h3, h4) + * {
+  margin-top: 1.25rem;
 }
 .prose a {
   color: var(--cobalt);
@@ -509,8 +546,23 @@ button {
   text-underline-offset: 0.2em;
 }
 .prose img {
+  display: block;
   max-width: 100%;
   height: auto;
+}
+.prose > :is(pre, blockquote, table, figure, .mermaid) {
+  margin-top: 2rem;
+}
+.prose ul,
+.prose ol {
+  margin-bottom: 0;
+  padding-left: 1.4rem;
+}
+.prose li + li {
+  margin-top: 0.45rem;
+}
+.prose li > :is(ul, ol) {
+  margin-top: 0.5rem;
 }
 .prose pre {
   overflow-x: auto;
@@ -531,6 +583,42 @@ button {
   padding-left: 1rem;
   border-left: 2px solid var(--cobalt);
   color: var(--muted);
+}
+.prose blockquote > :first-child {
+  margin-top: 0;
+}
+.prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+.prose th,
+.prose td {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.prose th {
+  background: var(--surface);
+  font-weight: 600;
+}
+.prose figure figcaption {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-align: center;
+}
+.prose .mermaid {
+  display: grid;
+  overflow-x: auto;
+  place-items: center;
 }
 .series-navigation {
   display: grid;
@@ -689,6 +777,17 @@ button {
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+  .prose {
+    --prose-flow-space: 1.25rem;
+    --prose-section-space: 3.25rem;
+    padding-top: 2.5rem;
+  }
+  .prose > h3 {
+    margin-top: 2.5rem;
+  }
+  .prose > h4 {
+    margin-top: 2rem;
   }
   .series-navigation {
     grid-template-columns: 1fr;
