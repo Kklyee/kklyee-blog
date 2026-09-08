@@ -1,6 +1,6 @@
 ---
 title: 大模型吃进去的是什么？从互联网数据到 Token
-description: "拆解大模型训练数据从网页解析、质量过滤、去重和数据混合，到 Tokenizer 与训练序列的完整生产流程。"
+description: 大模型并不是把互联网内容直接塞进 GPU。本文将沿着数据生产流程，讲清网页解析、质量过滤、内容去重、数据混合和 Tokenization，并解释训练数据与 Tokenizer 如何共同影响模型最终的能力。
 publishedAt: 2026-09-04
 series: llms-from-scratch
 seriesOrder: 2
