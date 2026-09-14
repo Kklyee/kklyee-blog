@@ -38,7 +38,6 @@ const { posts, seriesMap, postsPerPage } = Astro.props;
               </a>
             )}
           </div>
-          <p>{post.data.description}</p>
         </div>
         <span class="post-row__reading">{readingMinutes(post.body ?? "")} 分钟阅读</span>
       </li>

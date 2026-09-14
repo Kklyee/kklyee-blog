@@ -62,7 +62,7 @@ body {
   padding: 0px;
   font-feature-settings: "liga" 0;
 
-  line-height: 1.7;
+  line-height: 1.6;
   font-family: "IBM Plex Mono", monospace;
   font-weight: 300;
 }
@@ -310,6 +310,14 @@ button {
   padding: 1.25rem 0;
 }
 
+.post-row[hidden] {
+  display: none;
+}
+
+.post-row--entering {
+  animation: post-row-enter 0.3s ease both;
+}
+
 .post-row + .post-row {
   border-top: 1px solid var(--line);
 }
@@ -517,7 +525,7 @@ button {
 }
 .prose {
   --prose-flow-space: 1.5rem;
-  --prose-section-space: 4rem;
+  --prose-section-space: 3rem;
   padding: clamp(2.75rem, 5vw, 3.5rem) 0 4rem;
   font-size: 1.05rem;
   line-height: 1.9;
@@ -539,23 +547,34 @@ button {
 }
 .prose > h2 {
   margin-top: var(--prose-section-space);
-  font-size: 1.6rem;
+  font-size: clamp(1.65rem, 2.8vw, 2rem);
+  font-weight: 600;
 }
 .prose > h3 {
   margin-top: 3rem;
-  font-size: 1.3rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--cobalt);
+  color: var(--muted);
+  font-size: 1.12rem;
+  font-weight: 600;
 }
 .prose > h4 {
   margin-top: 2.5rem;
-  font-size: 1.12rem;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 600;
 }
 .prose > :is(h2, h3, h4) + * {
-  margin-top: 1.25rem;
+  margin-top: 0.9rem;
 }
 .prose a {
   color: var(--cobalt);
   text-decoration: underline;
   text-underline-offset: 0.2em;
+}
+.prose > :is(h3, h4) > a {
+  color: inherit;
+  text-decoration: none;
 }
 .prose img {
   display: block;
@@ -568,7 +587,10 @@ button {
 .prose ul,
 .prose ol {
   margin-bottom: 0;
-  padding-left: 1.4rem;
+  padding-left: 1.75rem;
+}
+.prose > :is(ul, ol) {
+  margin-left: 0.75rem;
 }
 .prose li + li {
   margin-top: 0.45rem;
@@ -603,9 +625,9 @@ button {
   margin-bottom: 0;
 }
 .prose table {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
   border-collapse: collapse;
   font-size: 0.9rem;
   line-height: 1.65;
@@ -732,6 +754,17 @@ button {
   }
 }
 
+@keyframes post-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.45rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 48rem) {
   .site-header__inner,
   .page-shell,
@@ -796,7 +829,7 @@ button {
   }
   .prose {
     --prose-flow-space: 1.25rem;
-    --prose-section-space: 3.25rem;
+    --prose-section-space: 2.5rem;
     padding-top: 2.5rem;
   }
   .prose > h3 {
@@ -804,6 +837,11 @@ button {
   }
   .prose > h4 {
     margin-top: 2rem;
+  }
+  .prose table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
   }
   .series-navigation {
     grid-template-columns: 1fr;
