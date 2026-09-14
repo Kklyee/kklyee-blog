@@ -298,13 +298,20 @@ button {
   padding: 0;
 }
 
+.post-list {
+  border-block: 1px solid var(--line);
+}
+
 .post-row {
   display: grid;
   grid-template-columns: 9.5rem minmax(0, 1fr) 7rem;
   gap: 1.5rem;
   align-items: center;
-  padding: 1.75rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 1.25rem 0;
+}
+
+.post-row + .post-row {
+  border-top: 1px solid var(--line);
 }
 
 .post-row time,
@@ -332,10 +339,15 @@ button {
   color: var(--cobalt);
 }
 .post-row__body p {
-  margin: 0.42rem 0 0;
+  display: -webkit-box;
+  margin: 0.3rem 0 0;
   color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.65;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
 }
 
 .series-link {
@@ -766,6 +778,10 @@ button {
   .post-row__body {
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+  .post-row__body p {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
   .floating-pagination {
     min-width: min(14rem, calc(100vw - 2rem));
