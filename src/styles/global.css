@@ -517,6 +517,23 @@ button {
 .article__header {
   padding-bottom: 0;
 }
+.article-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0 0 1.2rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.article-breadcrumb a:hover,
+.article-breadcrumb a:focus-visible {
+  color: var(--cobalt);
+}
+.article-breadcrumb [aria-current="page"] {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
 .article__date {
   margin: 0 0 1rem;
   color: var(--cobalt) !important;

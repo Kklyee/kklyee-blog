@@ -20,6 +20,7 @@ const selectedWork = [
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": new URL("/about/#person", Astro.site).href,
   name: "Kklyee",
   url: new URL("/about/", Astro.site).href,
   jobTitle: "全栈开发者",

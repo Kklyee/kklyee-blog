@@ -24,26 +24,43 @@ const {
 } = Astro.props;
 const outline = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const siteUrl = new URL("/", Astro.site);
+const postsUrl = new URL("/posts/", Astro.site);
+const authorUrl = new URL("/about/", Astro.site);
+const authorId = new URL("/about/#person", Astro.site).href;
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
+  "@id": `${canonicalUrl.href}#article`,
   headline: title,
   description,
   url: canonicalUrl.href,
-  mainEntityOfPage: canonicalUrl.href,
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl.href },
+  isPartOf: { "@id": siteUrl.href },
   inLanguage: "zh-CN",
   datePublished: publishedAt.toISOString(),
   dateModified: (updatedAt ?? publishedAt).toISOString(),
   author: {
     "@type": "Person",
+    "@id": authorId,
     name: "Kklyee",
-    url: new URL("/about/", Astro.site).href,
+    url: authorUrl.href,
   },
   publisher: {
     "@type": "Person",
+    "@id": authorId,
     name: "Kklyee",
-    url: new URL("/about/", Astro.site).href,
+    url: authorUrl.href,
   },
+};
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "首页", item: siteUrl.href },
+    { "@type": "ListItem", position: 2, name: "文章", item: postsUrl.href },
+    { "@type": "ListItem", position: 3, name: title, item: canonicalUrl.href },
+  ],
 };
 ---
 
@@ -53,11 +70,18 @@ const articleSchema = {
   type="article"
   publishedAt={publishedAt}
   updatedAt={updatedAt}
-  schema={articleSchema}
+  schema={[articleSchema, breadcrumbSchema]}
 >
   <div class="article-layout">
     <article class="article">
       <header class="article__header">
+        <nav class="article-breadcrumb" aria-label="面包屑">
+          <a href="/">首页</a>
+          <span aria-hidden="true">/</span>
+          <a href="/posts/">文章</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{title}</span>
+        </nav>
         <p class="article__date">
           <span>作者：<a rel="author" href="/about/">Kklyee</a></span>
           <span> · 发布于 <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time></span>

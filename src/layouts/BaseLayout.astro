@@ -17,7 +17,7 @@ interface Props {
 
 const {
   title = "Kklyee.top",
-  description = "写代码，也记录技术背后的判断与取舍。",
+  description = "Kklyee.top 是 Kklyee 的中文技术博客，记录 AI Agent、LLM 应用工程与 AI Coding 的实践和思考。",
   bodyClass,
   type = "website",
   publishedAt,
@@ -26,18 +26,24 @@ const {
 } = Astro.props;
 const pageTitle = title === "Kklyee.top" ? title : `${title} · Kklyee.top`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const siteUrl = new URL("/", Astro.site);
+const authorUrl = new URL("/about/", Astro.site);
+const authorId = new URL("/about/#person", Astro.site).href;
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": siteUrl.href,
   name: "Kklyee.top",
-  url: new URL("/", Astro.site).href,
+  url: siteUrl.href,
   inLanguage: "zh-CN",
   description: "Kklyee 的技术博客，记录 AI Agent、LLM 应用工程与 AI Coding 的实践和思考。",
   author: {
     "@type": "Person",
+    "@id": authorId,
     name: "Kklyee",
-    url: new URL("/about/", Astro.site).href,
+    url: authorUrl.href,
   },
+  publisher: { "@id": authorId },
 };
 const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
 ---
@@ -61,8 +67,10 @@ const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:url" content={canonicalUrl} />
     {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
     {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
+    {type === "article" && <meta property="article:author" content={authorUrl.href} />}
     <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" sizes="any" />
     <title>{pageTitle}</title>
     {

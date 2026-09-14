@@ -37,7 +37,13 @@ await readFile(join(dist, "llms.txt"), "utf8");
 
 const home = await readFile(join(dist, "index.html"), "utf8");
 assert.match(home, /<link rel="icon" href="\/brand\/favicon\.svg"/);
+assert.match(home, /<h1 id="intro-title">/);
+assert.match(home, /"@id":"https:\/\/kklyee\.top\/"/);
 const favicon = await readFile(join(dist, "brand", "favicon.svg"), "utf8");
 assert.match(favicon, /viewBox="0 0 112 112"/);
+
+const article = await readFile(join(dist, "posts", "llm-from-scratch", "01-llm", "index.html"), "utf8");
+assert.match(article, /class="article-breadcrumb"/);
+assert.match(article, /"@type":"BreadcrumbList"/);
 
 console.log("SEO output test passed");
