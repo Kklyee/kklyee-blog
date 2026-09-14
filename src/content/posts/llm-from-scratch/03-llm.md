@@ -2,8 +2,6 @@
 title: Transformer 到底在算什么？一文看懂 Attention
 description: Token 进入模型后经历了什么？本文将从 Embedding 和位置信息开始，逐步拆解 Self-Attention、QKV、多头注意力、MLP、残差连接和 KV Cache，帮助读者理解 Transformer 每一层究竟在计算什么。
 publishedAt: 2026-09-08
-series: "llms-from-scratch"
-seriesOrder: 3
 draft: false
 ---
 

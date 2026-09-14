@@ -10,13 +10,40 @@ export async function getPublishedPosts() {
 
 export async function getSeriesMap() {
   const entries = await getCollection("series");
-  return new Map(entries.map((entry) => [entry.id, entry]));
+  return new Map(entries.map((entry) => [entry.id.toLowerCase(), entry]));
+}
+
+/**
+ * Nested post paths are the source of truth for a post's series. The
+ * frontmatter fallback keeps older top-level posts working while they are
+ * being migrated.
+ */
+export function postSeriesId(post: Post) {
+  const [seriesId] = post.id.split("/");
+  return post.id.includes("/") ? seriesId : post.data.series;
+}
+
+/**
+ * Numbered filenames (for example, `01-llm.md`) define the order within a
+ * series. An explicit frontmatter value remains a fallback for legacy posts.
+ */
+export function postSeriesOrder(post: Post) {
+  const filename = post.id.split("/").at(-1) ?? "";
+  const orderMatch = filename.match(/^(\d+)(?:-|$)/);
+
+  return orderMatch ? Number(orderMatch[1]) : post.data.seriesOrder;
 }
 
 export function postsInSeries(posts: Post[], seriesId: string) {
   return posts
-    .filter((post) => post.data.series === seriesId)
-    .sort((a, b) => (a.data.seriesOrder ?? 999) - (b.data.seriesOrder ?? 999));
+    .filter((post) => postSeriesId(post) === seriesId)
+    .sort((a, b) => {
+      const orderDifference =
+        (postSeriesOrder(a) ?? Number.POSITIVE_INFINITY) -
+        (postSeriesOrder(b) ?? Number.POSITIVE_INFINITY);
+
+      return orderDifference || b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    });
 }
 
 export function formatDate(date: Date) {

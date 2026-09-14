@@ -1,6 +1,6 @@
 ---
 import type { Post, Series } from "../../lib/content";
-import { formatDate } from "../../lib/content";
+import { formatDate, postSeriesId, postSeriesOrder } from "../../lib/content";
 import { readingMinutes } from "../../lib/reading-time";
 
 interface Props {
@@ -14,7 +14,9 @@ const { posts, seriesMap, postsPerPage } = Astro.props;
 
 <ol class="post-list">
   {posts.map((post, index) => {
-    const series = post.data.series ? seriesMap.get(post.data.series) : undefined;
+    const seriesId = postSeriesId(post);
+    const series = seriesId ? seriesMap.get(seriesId) : undefined;
+    const seriesOrder = postSeriesOrder(post);
     return (
       <li
         class="post-row"
@@ -32,7 +34,7 @@ const { posts, seriesMap, postsPerPage } = Astro.props;
             {series && (
               <a class="series-link" href={`/collections/${series.id}/`}>
                 ↗ {series.data.title}
-                {post.data.seriesOrder ? ` · ${String(post.data.seriesOrder).padStart(2, "0")}` : ""}
+                {seriesOrder ? ` · ${String(seriesOrder).padStart(2, "0")}` : ""}
               </a>
             )}
           </div>
