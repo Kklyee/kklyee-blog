@@ -4,7 +4,6 @@ import { formatDate } from "../lib/content";
 import type { MarkdownHeading } from "astro";
 
 interface Props {
-  postId: string;
   title: string;
   description: string;
   publishedAt: Date;
@@ -15,7 +14,6 @@ interface Props {
 }
 
 const {
-  postId,
   title,
   description,
   publishedAt,
@@ -65,7 +63,7 @@ const articleSchema = {
           <span> · 发布于 <time datetime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time></span>
           {updatedAt && <span> · 更新于 <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></span>}
         </p>
-        <h1 transition:name={`post-title-${postId}`}>{title}</h1>
+        <h1>{title}</h1>
       </header>
       <div class="prose">
         <slot />

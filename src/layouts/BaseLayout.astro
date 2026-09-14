@@ -43,7 +43,7 @@ const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" transition:animate={fade({ duration: "0.35s" })}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -82,17 +82,33 @@ const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [
 
         applySavedTheme(document);
 
-        if (window.__kklyeeThemeNavigationInitialized) return;
-        window.__kklyeeThemeNavigationInitialized = true;
-        document.addEventListener("astro:before-swap", (event) => {
-          applySavedTheme(event.newDocument);
-        });
+        if (!window.__kklyeeThemeNavigationInitialized) {
+          window.__kklyeeThemeNavigationInitialized = true;
+          document.addEventListener("astro:before-swap", (event) => {
+            applySavedTheme(event.newDocument);
+          });
+        }
+
+        if (!window.__kklyeeScrollNavigationInitialized) {
+          window.__kklyeeScrollNavigationInitialized = true;
+          let previousScrollBehavior = "";
+          document.addEventListener("astro:before-preparation", () => {
+            previousScrollBehavior = document.documentElement.style.scrollBehavior;
+            document.documentElement.style.scrollBehavior = "auto";
+          });
+          document.addEventListener("astro:after-swap", () => {
+            if (!window.location.hash) {
+              window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+            }
+            document.documentElement.style.scrollBehavior = previousScrollBehavior;
+          });
+        }
       })();
     </script>
   </head>
   <body class={bodyClass}>
     <Header />
-    <main class="page-shell" transition:animate={fade({ duration: "0.35s" })}>
+    <main class="page-shell">
       <slot />
     </main>
     <Footer />

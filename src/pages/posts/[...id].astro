@@ -20,7 +20,6 @@ const nextPost = seriesIndex >= 0 ? seriesPosts[seriesIndex + 1] : undefined;
 
 <ArticleLayout
   {...post.data}
-  postId={post.id}
   headings={headings}
   previousPost={previousPost && { id: previousPost.id, title: previousPost.data.title }}
   nextPost={nextPost && { id: nextPost.id, title: nextPost.data.title }}

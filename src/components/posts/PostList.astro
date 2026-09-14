@@ -29,7 +29,6 @@ const { posts, seriesMap, postsPerPage } = Astro.props;
             <a
               class="post-row__title"
               href={`/posts/${post.id}/`}
-              transition:name={`post-title-${post.id}`}
             >{post.data.title}</a>
             {series && (
               <a class="series-link" href={`/collections/${series.id}/`}>
