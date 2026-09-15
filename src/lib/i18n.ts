@@ -57,7 +57,7 @@ export const messages = {
       manifestoLabel: "工作方法",
       manifesto: "让模型、上下文与工具，在真实的软件系统中协同工作。",
       focusTitle: "FOCUS / 03",
-      workTitle: "WORKS / 02",
+      workTitle: "WORKS / 03",
       jobTitle: "全栈开发者",
     },
     article: {
@@ -125,7 +125,7 @@ export const messages = {
       manifestoLabel: "Working method",
       manifesto: "Making models, context, and tools work together in real software systems.",
       focusTitle: "FOCUS / 03",
-      workTitle: "WORKS / 02",
+      workTitle: "WORKS / 03",
       jobTitle: "Full-stack developer",
     },
     article: {
