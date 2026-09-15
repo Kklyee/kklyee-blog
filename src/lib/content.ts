@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import type { Locale } from "./i18n";
 
 export type Post = CollectionEntry<"posts">;
 export type Series = CollectionEntry<"series">;
@@ -46,8 +47,8 @@ export function postsInSeries(posts: Post[], seriesId: string) {
     });
 }
 
-export function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("zh-CN", {
+export function formatDate(date: Date, locale: Locale = "zh-cn") {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "zh-CN", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import PostPage from "../../components/pages/PostPage.astro";
+import PostPage from "../../../components/pages/PostPage.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
@@ -10,4 +10,4 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 ---
 
-<PostPage locale="zh-cn" post={post} />
+<PostPage locale="en" post={post} />

@@ -1,0 +1,30 @@
+---
+import { render } from "astro:content";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import { getPublishedPosts, postSeriesId, postsInSeries, type Post } from "../../lib/content";
+import type { Locale } from "../../lib/i18n";
+
+interface Props {
+  locale: Locale;
+  post: Post;
+}
+
+const { locale, post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const seriesId = postSeriesId(post);
+const seriesPosts = seriesId ? postsInSeries(await getPublishedPosts(), seriesId) : [];
+const seriesIndex = seriesPosts.findIndex(({ id }) => id === post.id);
+const previousPost = seriesIndex > 0 ? seriesPosts[seriesIndex - 1] : undefined;
+const nextPost = seriesIndex >= 0 ? seriesPosts[seriesIndex + 1] : undefined;
+---
+
+<ArticleLayout
+  {...post.data}
+  headings={headings}
+  previousPost={previousPost && { id: previousPost.id, title: previousPost.data.title }}
+  nextPost={nextPost && { id: nextPost.id, title: nextPost.data.title }}
+  locale={locale}
+>
+  <Content />
+</ArticleLayout>

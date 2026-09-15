@@ -1,9 +1,16 @@
+---
+import { getLocaleFromPath, getLocalizedPath, messages } from "../../lib/i18n";
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = messages[locale];
+---
+
 <footer class="site-footer">
   <span>© {new Date().getFullYear()} Kklyee.top</span>
-  <nav aria-label="页脚导航">
+  <nav aria-label={t.footer.ariaLabel}>
     <a href="https://github.com/Kklyee" target="_blank" rel="noreferrer">GitHub</a>
     <a href="mailto:1984167403@qq.com">Email</a>
     <a href="/rss.xml">RSS</a>
-    <a href="/posts/">归档</a>
+    <a href={getLocalizedPath(locale, "/posts/")}>{t.footer.archive}</a>
   </nav>
 </footer>

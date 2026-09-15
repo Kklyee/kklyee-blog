@@ -1,19 +1,53 @@
 ---
 import KklyeeLogo from "../brand/KklyeeLogo.astro";
+import { getLocaleFromPath, getLocalizedPath, messages } from "../../lib/i18n";
 
 const pathname = Astro.url.pathname;
+const locale = getLocaleFromPath(pathname);
+const t = messages[locale];
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
-    <KklyeeLogo />
-    <nav class="site-nav" aria-label="主导航">
-      <a href="/collections/" class:list={{ active: pathname.startsWith("/collections") }}>合集</a>
-      <a href="/about/" class:list={{ active: pathname.startsWith("/about") }}>关于</a>
+    <KklyeeLogo locale={locale} />
+    <nav class="site-nav" aria-label={t.nav.ariaLabel}>
+      <a href={getLocalizedPath(locale, "/collections/")} class:list={{ active: pathname.includes("/collections") }}>{t.nav.collections}</a>
+      <a href={getLocalizedPath(locale, "/about/")} class:list={{ active: pathname.includes("/about") }}>{t.nav.about}</a>
+      <div class="locale-menu" data-locale-menu>
+        <button
+          class="locale-menu__trigger"
+          type="button"
+          aria-label={t.nav.language}
+          aria-expanded="false"
+          aria-controls="locale-menu-options"
+          data-locale-menu-trigger
+        >
+          <span>{locale === "en" ? "EN" : "中文"}</span>
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="m2.5 4.5 3.5 3 3.5-3"></path>
+          </svg>
+        </button>
+        <div class="locale-menu__options" id="locale-menu-options">
+          <a
+            href={getLocalizedPath("zh-cn", pathname)}
+            lang="zh-CN"
+            class:list={{ current: locale === "zh-cn" }}
+            aria-current={locale === "zh-cn" ? "page" : undefined}
+          >中文</a>
+          <a
+            href={getLocalizedPath("en", pathname)}
+            lang="en"
+            class:list={{ current: locale === "en" }}
+            aria-current={locale === "en" ? "page" : undefined}
+          >English</a>
+        </div>
+      </div>
       <button
         class="theme-toggle"
         type="button"
-        aria-label="当前为浅色主题，切换为深色主题"
+        aria-label={t.theme.light}
+        data-theme-light={t.theme.light}
+        data-theme-dark={t.theme.dark}
         aria-pressed="false"
       >
         <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true">
@@ -38,10 +72,12 @@ const pathname = Astro.url.pathname;
       const dark = root.dataset.theme === "dark" ||
         (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
       document.querySelectorAll(".theme-toggle").forEach((toggle) => {
+        const lightLabel = toggle.dataset.themeLight ?? "Switch to dark theme";
+        const darkLabel = toggle.dataset.themeDark ?? "Switch to light theme";
         toggle.setAttribute("aria-pressed", String(dark));
         toggle.setAttribute(
           "aria-label",
-          dark ? "当前为深色主题，切换为浅色主题" : "当前为浅色主题，切换为深色主题",
+          dark ? darkLabel : lightLabel,
         );
       });
     };
@@ -64,6 +100,46 @@ const pathname = Astro.url.pathname;
       root.dataset.theme = next;
       localStorage.setItem("kklyee-theme", next);
       syncToggle();
+    });
+  })();
+</script>
+
+<script is:inline>
+  (() => {
+    const syncLocaleMenus = () => {
+      document.querySelectorAll("[data-locale-menu]").forEach((menu) => {
+        const open = menu.dataset.open === "true";
+        menu.querySelector("[data-locale-menu-trigger]")?.setAttribute("aria-expanded", String(open));
+      });
+    };
+
+    syncLocaleMenus();
+    document.addEventListener("astro:page-load", syncLocaleMenus);
+
+    if (window.__kklyeeLocaleMenuInitialized) return;
+    window.__kklyeeLocaleMenuInitialized = true;
+
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      const trigger = target instanceof Element ? target.closest("[data-locale-menu-trigger]") : null;
+      const menu = target instanceof Element ? target.closest("[data-locale-menu]") : null;
+
+      if (trigger && menu) {
+        menu.dataset.open = String(menu.dataset.open !== "true");
+        syncLocaleMenus();
+        return;
+      }
+
+      if (!menu) {
+        document.querySelectorAll("[data-locale-menu]").forEach((item) => delete item.dataset.open);
+        syncLocaleMenus();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      document.querySelectorAll("[data-locale-menu]").forEach((menu) => delete menu.dataset.open);
+      syncLocaleMenus();
     });
   })();
 </script>

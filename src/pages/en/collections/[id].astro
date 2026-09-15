@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import CollectionPage from "../../components/pages/CollectionPage.astro";
+import CollectionPage from "../../../components/pages/CollectionPage.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("series");
@@ -10,4 +10,4 @@ export async function getStaticPaths() {
 const { series } = Astro.props;
 ---
 
-<CollectionPage locale="zh-cn" series={series} />
+<CollectionPage locale="en" series={series} />

@@ -2,14 +2,17 @@
 import type { Post, Series } from "../../lib/content";
 import { formatDate, postSeriesId, postSeriesOrder } from "../../lib/content";
 import { readingMinutes } from "../../lib/reading-time";
+import { getLocalizedPath, messages, type Locale } from "../../lib/i18n";
 
 interface Props {
   posts: Post[];
   seriesMap: Map<string, Series>;
   postsPerPage?: number;
+  locale?: Locale;
 }
 
-const { posts, seriesMap, postsPerPage } = Astro.props;
+const { posts, seriesMap, postsPerPage, locale = "zh-cn" } = Astro.props;
+const t = messages[locale];
 ---
 
 <ol class="post-list">
@@ -23,22 +26,22 @@ const { posts, seriesMap, postsPerPage } = Astro.props;
         data-post-index={postsPerPage ? index : undefined}
         hidden={postsPerPage ? index >= postsPerPage : false}
       >
-        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt, locale)}</time>
         <div class="post-row__body">
           <div class="post-row__titleline">
             <a
               class="post-row__title"
-              href={`/posts/${post.id}/`}
+              href={getLocalizedPath(locale, "/posts/" + post.id + "/")}
             >{post.data.title}</a>
             {series && (
-              <a class="series-link" href={`/collections/${series.id}/`}>
+              <a class="series-link" href={getLocalizedPath(locale, "/collections/" + series.id + "/")}>
                 ↗ {series.data.title}
                 {seriesOrder ? ` · ${String(seriesOrder).padStart(2, "0")}` : ""}
               </a>
             )}
           </div>
         </div>
-        <span class="post-row__reading">{readingMinutes(post.body ?? "")} 分钟阅读</span>
+        <span class="post-row__reading">{readingMinutes(post.body ?? "")} {t.posts.readingMinutes}</span>
       </li>
     );
   })}

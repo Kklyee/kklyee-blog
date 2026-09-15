@@ -12,6 +12,10 @@ import rehypeExternalLinks from "rehype-external-links";
 export default defineConfig({
   site: "https://kklyee.top",
   output: "static",
+  i18n: {
+    locales: ["zh-cn", "en"],
+    defaultLocale: "zh-cn",
+  },
   integrations: [mdx(), sitemap()],
   markdown: {
     processor: unified(),

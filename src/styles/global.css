@@ -137,6 +137,110 @@ button {
   position: relative;
 }
 
+.locale-menu {
+  position: relative;
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.locale-menu::after {
+  content: "";
+  position: absolute;
+  z-index: 19;
+  top: calc(100% - 0.45rem);
+  left: 50%;
+  width: 7.6rem;
+  height: 0.9rem;
+  transform: translateX(-50%);
+}
+
+.locale-menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--cobalt);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.locale-menu__trigger:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 0.25rem;
+}
+
+.locale-menu__trigger svg {
+  width: 0.65rem;
+  height: 0.65rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+  transition: transform 0.18s ease;
+}
+
+.locale-menu[data-open="true"] .locale-menu__trigger svg,
+.locale-menu:hover .locale-menu__trigger svg,
+.locale-menu:focus-within .locale-menu__trigger svg {
+  transform: rotate(180deg);
+}
+
+.locale-menu__options {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% - 0.15rem);
+  right: auto;
+  left: 50%;
+  display: grid;
+  min-width: 7.2rem;
+  padding: 0.35rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 0.6rem 1.5rem color-mix(in srgb, var(--ink) 15%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -0.35rem);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
+  pointer-events: none;
+}
+
+.locale-menu[data-open="true"] .locale-menu__options,
+.locale-menu:hover .locale-menu__options,
+.locale-menu:focus-within .locale-menu__options {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.locale-menu__options a {
+  position: static;
+  display: block;
+  padding: 0.35rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.locale-menu__options a::after {
+  display: none;
+}
+
+.locale-menu__options a:hover,
+.locale-menu__options a:focus-visible,
+.locale-menu__options a.current {
+  background: color-mix(in srgb, var(--cobalt) 10%, transparent);
+  color: var(--cobalt);
+}
+
 .site-nav a::after,
 .site-footer a::after {
   content: "";
@@ -159,8 +263,7 @@ button {
 
 .theme-toggle {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+
   place-items: center;
   border: 0;
   border-radius: 50%;
@@ -176,8 +279,8 @@ button {
 
 .theme-toggle__icon {
   grid-area: 1 / 1;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.2rem;
+  height: 1.2rem;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;

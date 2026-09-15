@@ -2,13 +2,15 @@
 interface Props {
   animated?: boolean;
   class?: string;
+  locale?: import("../../lib/i18n").Locale;
 }
 
-const { animated = true, class: className = "" } = Astro.props;
+const { animated = true, class: className = "", locale = "zh-cn" } = Astro.props;
 const suffix = animated ? "-animated" : "";
+const homeHref = locale === "en" ? "/en/" : "/";
 ---
 
-<a class={`brand-logo ${className}`} href="/" aria-label="Kklyee.top 首页">
+<a class={`brand-logo ${className}`} href={homeHref} aria-label={locale === "en" ? "Kklyee.top home" : "Kklyee.top 首页"}>
   <img
     class="brand-logo__light"
     src={`/brand/logo-light${suffix}.svg`}

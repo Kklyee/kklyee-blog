@@ -3,6 +3,7 @@ import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
 import MermaidRenderer from "../components/posts/MermaidRenderer.astro";
 import { ClientRouter, fade } from "astro:transitions";
+import { getLocaleFromPath, getLocalizedPath, messages, type Locale } from "../lib/i18n";
 import "../styles/global.css";
 
 interface Props {
@@ -13,30 +14,35 @@ interface Props {
   publishedAt?: Date;
   updatedAt?: Date;
   schema?: Record<string, unknown> | Record<string, unknown>[];
+  locale?: Locale;
 }
 
 const {
   title = "Kklyee.top",
-  description = "Kklyee.top 是 Kklyee 的中文技术博客，记录 AI Agent、LLM 应用工程与 AI Coding 的实践和思考。",
+  description,
   bodyClass,
   type = "website",
   publishedAt,
   updatedAt,
   schema,
+  locale: localeProp,
 } = Astro.props;
+const locale = localeProp ?? getLocaleFromPath(Astro.url.pathname);
+const t = messages[locale];
+const pageDescription = description ?? t.siteDescription;
 const pageTitle = title === "Kklyee.top" ? title : `${title} · Kklyee.top`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
-const siteUrl = new URL("/", Astro.site);
-const authorUrl = new URL("/about/", Astro.site);
-const authorId = new URL("/about/#person", Astro.site).href;
+const siteUrl = new URL(getLocalizedPath(locale, "/"), Astro.site);
+const authorUrl = new URL(getLocalizedPath(locale, "/about/"), Astro.site);
+const authorId = new URL(getLocalizedPath(locale, "/about/") + "#person", Astro.site).href;
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": siteUrl.href,
   name: "Kklyee.top",
   url: siteUrl.href,
-  inLanguage: "zh-CN",
-  description: "Kklyee 的技术博客，记录 AI Agent、LLM 应用工程与 AI Coding 的实践和思考。",
+  inLanguage: t.htmlLang,
+  description: pageDescription,
   author: {
     "@type": "Person",
     "@id": authorId,
@@ -49,24 +55,24 @@ const schemas = [websiteSchema, ...(schema ? (Array.isArray(schema) ? schema : [
 ---
 
 <!doctype html>
-<html lang="zh-CN" transition:animate={fade({ duration: "0.35s" })}>
+<html lang={t.htmlLang} transition:animate={fade({ duration: "0.35s" })}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     <meta name="author" content="Kklyee" />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" type="application/rss+xml" title="Kklyee.top RSS" href={new URL("/rss.xml", Astro.site)} />
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Kklyee.top" />
-    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale" content={t.ogLocale} />
     <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonicalUrl} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:url" content={canonicalUrl} />
     {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
     {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
